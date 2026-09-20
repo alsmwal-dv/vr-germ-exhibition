@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <title>محاكاة سلسلة العدوى التفاعلية - VR</title>
+    <!-- استدعاء مكتبة الواقع الافتراضي للويب -->
+    <script src="https://aframe.io"></script>
+    <script>
+      // نظام إدارة مراحل لعبة "رحلة الجرثومة" الست بناءً على مستند المعرض
+      var currentStage = 1;
+      var score = 0;
+
+      var stagesData = {
+        1: {
+          title: "المرحلة 1: العامل المسبب (Infectious Agent)",
+          question: "تم رصد جرثومة نشطة في الجناح، ما هو الإجراء الأول؟",
+          options: [
+            { text: "تحديد نوع الجرثومة وعزلها", correct: true },
+            { text: "تجاهلها والانتظار", correct: false },
+            { text: "إعطاء المريض مسكن آلام", correct: false }
+          ]
+        },
+        2: {
+          title: "المرحلة 2: المستودع (Reservoir)",
+          question: "الجرثومة تتكاثر الآن على الأسطح ومقابض الأبواب، كيف تقطع السلسلة؟",
+          options: [
+            { text: "ترك الأسطح لتجف تلقائياً", correct: false },
+            { text: "تطهير وتعقيم الأسطح فوراً", correct: true },
+            { text: "تغطية الأسطح بقماش عادي", correct: false }
+          ]
+        },
+        3: {
+          title: "المرحلة 3: منفذ الخروج (Portal of Exit)",
+          question: "تخرج الجراثيم عبر رذاذ السعال من الشخص المصاب، ما الإجراء السليم؟",
+          options: [
+            { text: "طلب من المريض تغطية فمه أو لبس كمامة", correct: true },
+            { text: "فتح النوافذ فقط", correct: false },
+            { text: "السماح له بالتجول في المعرض", correct: false }
+          ]
+        },
+        4: {
+          title: "المرحلة 4: طريقة الانتقال (Mode of Transmission)",
+          question: "تنتقل الجراثيم عبر الأيدي والمصافحة، كيف تمنع انتشارها؟",
+          options: [
+            { text: "المصافحة مع غسيل لاحق", correct: false },
+            { text: "فرك اليدين بالملابس", correct: false },
+            { text: "غسل اليدين بالماء والصابون 50-60 ثانية", correct: true }
+          ]
+        },
+        5: {
+          title: "المرحلة 5: منفذ الدخول (Portal of Entry)",
+          question: "تحاول الجرثومة الدخول عبر العين أو الفم لشخص سليم، ما الحماية؟",
+          options: [
+            { text: "تجنب لمس الوجه وارتداء واقي العين", correct: true },
+            { text: "غسل الوجه بالماء فقط", correct: false },
+            { text: "استخدام مناديل غير معقمة", correct: false }
+          ]
+        },
+        6: {
+          title: "المرحلة 6: الشخص المعرض للإصابة (Susceptible Host)",
+          question: "المهمة الأخيرة: الجرثومة تقترب من مريض ضعيف المناعة، كيف تحميه؟",
+          options: [
+            { text: "تطبيق إجراءات العزل الوقائي ومعدات الحماية", correct: true },
+            { text: "السماح بالزيارات المفتوحة له", correct: false },
+            { text: "وضعه في الممر العام", correct: false }
+          ]
+        }
+      };
+
+      AFRAME.registerComponent('game-controller', {
+        init: function () {
+          this.updateScene();
+        },
+        
+        updateScene: function () {
+          var data = stagesData[currentStage];
+          
+          if (!data) {
+            // نهاية اللعبة والنجاح في كسر السلسلة
+            document.querySelector('#germ-model').setAttribute('visible', 'false');
+            document.querySelector('#ui-panel').setAttribute('visible', 'false');
+            document.querySelector('#victory-panel').setAttribute('visible', 'true');
+            return;
+          }
+
+          document.querySelector('#stage-title').setAttribute('value', data.title);
+          document.querySelector('#stage-question').setAttribute('value', data.question);
+          document.querySelector('#score-text').setAttribute('value', "النقاط: " + score + " / 6");
+          document.querySelector('#feedback').setAttribute('value', "وجه نظرك نحو الإجراء الصحيح...");
+          document.querySelector('#feedback').setAttribute('color', "#FFFF00");
+
+          for (var i = 0; i < 3; i++) {
+            var btn = document.querySelector('#btn-' + i);
+            var txt = document.querySelector('#btn-text-' + i);
+            btn.setAttribute('material', 'color: #333; opacity: 0.8');
+            
+            if (data.options[i]) {
+              txt.setAttribute('value', data.options[i].text);
+              btn.setAttribute('data-correct', data.options[i].correct);
+              btn.setAttribute('visible', 'true');
+              btn.classList.add('clickable');
+            } else {
+              btn.setAttribute('visible', 'false');
+              btn.classList.remove('clickable');
+            }
+          }
+        },
+
+        checkAnswer: function (isCorrect, clickedBtn) {
+          var self = this;
+          var feedbackText = document.querySelector('#feedback');
+          
+          if (isCorrect === 'true') {
+            score++;
+            clickedBtn.setAttribute('material', 'color: #00FF00; opacity: 0.9');
+            feedbackText.setAttribute('value', "إجابة صحيحة! تم قطع هذه المرحلة بنجاح.");
+            feedbackText.setAttribute('color', "#00FF00");
+            
+            setTimeout(function() {
+              currentStage++;
+              self.updateScene();
+            }, 2000);
+          } else {
+            clickedBtn.setAttribute('material', 'color: #FF0000; opacity: 0.9');
+            feedbackText.setAttribute('value', "إجراء خاطئ! استمرت الجرثومة في الانتقال، حاول مجدداً.");
+            feedbackText.setAttribute('color', "#FF0000");
+          }
+        }
+      });
+
+      AFRAME.registerComponent('option-click', {
+        init: function () {
+          var el = this.el;
+          el.addEventListener('click', function () {
+            var isCorrect = el.getAttribute('data-correct');
+            var controller = document.querySelector('[game-controller]').components['game-controller'];
+            controller.checkAnswer(isCorrect, el);
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene game-controller>
+      <a-assets>
+        <!-- استدعاء ملفاتك الخاصة بالأسماء المبسطة والمطابقة 100% -->
+        <img id="skybox" src="background.jpg">
+        <a-asset-item id="germ" src="germ.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- الخلفية البانورامية للموقع المستخرج -->
+      <a-sky src="#skybox"></a-sky>
+
+      <!-- الإضاءة لتفتيح المشهد وضمان عدم سواده -->
+      
+      
+
+      <!-- مجسم الجرثومة ثلاثي الأبعاد المحدث بالاسم البسيط -->
+      
+      
+
+      <!-- لوحة التحكم والأسئلة (تظهر أمام الزائر مباشرة بوضوح) -->
+      
+        <a-text id="stage-title" value="" align="center" width="4.5" position="0 0.9 0" color="#00E5FF"></a-text>
+        <a-text id="stage-question" value="" align="center" width="3.5" position="0 0.6 0" color="#FFF"></a-text>
+        <a-text id="score-text" value="" align="right" width="3" position="1.5 0.9 0" color="#AAA"></a-text>
+        <a-text id="feedback" value="" align="center" width="3.5" position="0 0.25 0"></a-text>
+
+        <!-- الأزرار التفاعلية الثلاثة للخيارات -->
+        
+          <a-text id="btn-text-0" value="" align="center" width="3.2" color="#FFF"></a-text>
+        
+
+        
+          <a-text id="btn-text-1" value="" align="center" width="3.2" color="#FFF"></a-text>
+        
+
+        
+          <a-text id="btn-text-2" value="" align="center" width="3.2" color="#FFF"></a-text>
+        
+      
+
+      <!-- لوحة الفوز بعد إنهاء الـ 6 مراحل بنجاح -->
+      
+        <a-text value="أنت بطل مكافحة العدوى!" align="center" width="6" position="0 0.5 0" color="#00FF00"></a-text>
+        <a-text value="لقد نجحت في كسر سلسلة العدوى بالكامل وحماية جميع المرضى." align="center" width="4" position="0 0.1 0" color="#FFF"></a-text>
+        <a-text value="الوقاية من العدوى تبدأ بخطوة بسيطة... ولكن أثرها يحمي الجميع." align="center" width="3.5" position="0 -0.3 0" color="#FFFF00"></a-text>
+      
+
+      <!-- نظام الكاميرا والمؤشر بالنظارة للتحكم بالاختيارات -->
+      <a-camera>
+        <a-cursor id="cursor" raycaster="objects: .clickable" material="color: #00E5FF; shader: flat" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.025"></a-cursor>
+      </a-camera>
+    </a-scene>
+  </body>
+</html>
