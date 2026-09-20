@@ -141,7 +141,8 @@
     </script>
   </head>
   <body>
-    <a-scene game-controller>
+    <!-- إضافة محسنات الألوان والإضاءة للمجسمات ثلاثية الأبعاد -->
+    <a-scene game-controller renderer="colorManagement: true;">
       <a-assets>
         <!-- استدعاء ملفاتك الخاصة بالأسماء المبسطة والمطابقة 100% -->
         <img id="skybox" src="background.jpg">
@@ -151,44 +152,45 @@
       <!-- الخلفية البانورامية للموقع المستخرج -->
       <a-sky src="#skybox"></a-sky>
 
-      <!-- الإضاءة لتفتيح المشهد وضمان عدم سواده -->
+      <!-- نظام إضاءة مكثف وشامل لضمان إنارة المجسم من كل الزوايا -->
+      
       
       
 
-      <!-- مجسم الجرثومة ثلاثي الأبعاد المحدث بالاسم البسيط -->
+      <!-- مجسم الجرثومة: تم وضعه في موضع أقرب (z = -2.5) وضبط الحجم ليكون ظاهراً ومحاذياً للوحة الأسئلة -->
       
       
 
       <!-- لوحة التحكم والأسئلة (تظهر أمام الزائر مباشرة بوضوح) -->
       
-        <a-text id="stage-title" value="" align="center" width="4.5" position="0 0.9 0" color="#00E5FF"></a-text>
-        <a-text id="stage-question" value="" align="center" width="3.5" position="0 0.6 0" color="#FFF"></a-text>
-        <a-text id="score-text" value="" align="right" width="3" position="1.5 0.9 0" color="#AAA"></a-text>
-        <a-text id="feedback" value="" align="center" width="3.5" position="0 0.25 0"></a-text>
+        <a-text id="stage-title" value="" align="center" width="3.5" position="0 0.8 0" color="#00E5FF"></a-text>
+        <a-text id="stage-question" value="" align="center" width="2.5" position="0 0.55 0" color="#FFF"></a-text>
+        <a-text id="score-text" value="" align="right" width="2" position="1.0 0.8 0" color="#AAA"></a-text>
+        <a-text id="feedback" value="" align="center" width="2.5" position="0 0.25 0"></a-text>
 
         <!-- الأزرار التفاعلية الثلاثة للخيارات -->
         
-          <a-text id="btn-text-0" value="" align="center" width="3.2" color="#FFF"></a-text>
+          <a-text id="btn-text-0" value="" align="center" width="2.4" color="#FFF"></a-text>
         
 
         
-          <a-text id="btn-text-1" value="" align="center" width="3.2" color="#FFF"></a-text>
+          <a-text id="btn-text-1" value="" align="center" width="2.4" color="#FFF"></a-text>
         
 
         
-          <a-text id="btn-text-2" value="" align="center" width="3.2" color="#FFF"></a-text>
+          <a-text id="btn-text-2" value="" align="center" width="2.4" color="#FFF"></a-text>
         
       
 
       <!-- لوحة الفوز بعد إنهاء الـ 6 مراحل بنجاح -->
       
-        <a-text value="أنت بطل مكافحة العدوى!" align="center" width="6" position="0 0.5 0" color="#00FF00"></a-text>
-        <a-text value="لقد نجحت في كسر سلسلة العدوى بالكامل وحماية جميع المرضى." align="center" width="4" position="0 0.1 0" color="#FFF"></a-text>
-        <a-text value="الوقاية من العدوى تبدأ بخطوة بسيطة... ولكن أثرها يحمي الجميع." align="center" width="3.5" position="0 -0.3 0" color="#FFFF00"></a-text>
+        <a-text value="أنت بطل مكافحة العدوى!" align="center" width="5" position="0 0.5 0" color="#00FF00"></a-text>
+        <a-text value="لقد نجحت في كسر سلسلة العدوى بالكامل وحماية جميع المرضى." align="center" width="3.5" position="0 0.1 0" color="#FFF"></a-text>
+        <a-text value="الوقاية من العدوى تبدأ بخطوة بسيطة... ولكن أثرها يحمي الجميع." align="center" width="3" position="0 -0.3 0" color="#FFFF00"></a-text>
       
 
       <!-- نظام الكاميرا والمؤشر بالنظارة للتحكم بالاختيارات -->
-      <a-camera>
+      <a-camera position="0 1.6 0">
         <a-cursor id="cursor" raycaster="objects: .clickable" material="color: #00E5FF; shader: flat" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.025"></a-cursor>
       </a-camera>
     </a-scene>
