@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>محاكاة سلسلة العدوى التفاعلية - VR</title>
-    <!-- استدعاء المكتبة الرسمية المحدثة للواقع الافتراضي والتفاعل -->
+    <!-- استدعاء المكتبة الرسمية للواقع الافتراضي -->
     <script src="https://aframe.io"></script>
     <script>
       // نظام إدارة مراحل لعبة "رحلة الجرثومة" الست بناءً على مستند المعرض
@@ -67,6 +67,7 @@
         }
       };
 
+      // مكون برمجى مخصص لالتقاط زر الاختيار
       AFRAME.registerComponent('game-controller', {
         init: function () {
           this.updateScene();
@@ -92,7 +93,7 @@
           for (var i = 0; i < 3; i++) {
             var btn = document.querySelector('#btn-' + i);
             var txt = document.querySelector('#btn-text-' + i);
-            btn.setAttribute('material', 'color: #111122; opacity: 0.95'); // لون داكن للأزرار لتظهر بوضوح
+            btn.setAttribute('material', 'color: #111122; opacity: 0.9'); 
             
             if (data.options[i]) {
               txt.setAttribute('value', data.options[i].text);
@@ -110,9 +111,9 @@
           var self = this;
           var feedbackText = document.querySelector('#feedback');
           
-          if (isCorrect === 'true') {
+          if (isCorrect === 'true' || isCorrect === true) {
             score++;
-            clickedBtn.setAttribute('material', 'color: #00FF00; opacity: 1'); // تلوين أخضر فوري عند الاختيار الصحيح
+            clickedBtn.setAttribute('material', 'color: #00FF00; opacity: 1'); 
             feedbackText.setAttribute('value', "إجابة صحيحة! تم قطع هذه المرحلة بنجاح.");
             feedbackText.setAttribute('color', "#00FF00");
             
@@ -121,45 +122,52 @@
               self.updateScene();
             }, 2000);
           } else {
-            clickedBtn.setAttribute('material', 'color: #FF0000; opacity: 1'); // تلوين أحمر عند الخطأ
+            clickedBtn.setAttribute('material', 'color: #FF0000; opacity: 1'); 
             feedbackText.setAttribute('value', "إجراء خاطئ! استمرت الجرثومة في الانتقال، حاول مجدداً.");
             feedbackText.setAttribute('color', "#FF0000");
           }
         }
       });
+
+      AFRAME.registerComponent('option-click', {
+        init: function () {
+          var el = this.el;
+          el.addEventListener('click', function () {
+            var isCorrect = el.getAttribute('data-correct');
+            var controller = document.querySelector('[game-controller]').components['game-controller'];
+            controller.checkAnswer(isCorrect, el);
+          });
+        }
+      });
     </script>
   </head>
   <body>
-    <!-- تم ضبط نظام الرندر ليدعم استدعاء عناصر ثلاثية الأبعاد بوضوح وبألوان حقيقية -->
     <a-scene game-controller renderer="colorManagement: true;">
       <a-assets>
-        <!-- روابط مؤمنة ومفتوحة عالمياً متوافقة مع متصفحات الـ VR لتجنب الشاشة البيضاء أو الانهيار -->
+        <!-- روابط ملفات الويب المفتوحة المصدر لضمان التحميل الفوري وعدم الانهيار -->
         <img id="skybox" crossorigin="anonymous" src="https://unsplash.com">
-        <!-- مجسم ثلاثي الأبعاد هندسي جاهز كبديل آمن وسريع التحميل داخل النظارة -->
         <a-asset-item id="germ" crossorigin="anonymous" src="https://jsdelivr.net"></a-asset-item>
       </a-assets>
 
       <!-- سماء المشهد الافتراضي البانورامي -->
       <a-sky src="#skybox"></a-sky>
 
-      <!-- إضاءة المشهد بالكامل لضمان رؤية الأزرار بوضوح شديد -->
-      <a-lightning>
-        
-        
-      </a-lightning>
+      <!-- تصحيح نظام الإضاءة ليعمل بشكل سليم متوافق مع المكتبة -->
+      
+      
 
       <!-- مجسم تفاعلي يدور أمام المستخدم مباشرة ويمثل الخطر البيولوجي -->
       
       
 
-      <!-- لوحة التحكم التفاعلية الكبيرة والأسئلة (موضوعة هندسياً لتكون مريحة لعين الزائر) -->
+      <!-- لوحة التحكم التفاعلية الكبيرة والأسئلة -->
       
         <a-text id="stage-title" value="" align="center" width="3" position="0 0.8 0" color="#00E5FF"></a-text>
         <a-text id="stage-question" value="" align="center" width="2.2" position="0 0.55 0" color="#FFF"></a-text>
         <a-text id="score-text" value="" align="right" width="2" position="0.9 0.8 0" color="#AAA"></a-text>
         <a-text id="feedback" value="" align="center" width="2" position="0 0.25 0"></a-text>
 
-        <!-- الأزرار التفاعلية الثلاثة (الخيارات) المصممة بخلفية مستطيلة واضحة قابلة للنقر -->
+        <!-- الأزرار التفاعلية الثلاثة المصممة بخلفية قابلة للنقر -->
         
           <a-text id="btn-text-0" value="" align="center" width="2" color="#FFF"></a-text>
         
