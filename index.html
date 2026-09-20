@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>محاكاة سلسلة العدوى التفاعلية - VR</title>
-    <!-- استدعاء مكتبة الواقع الافتراضي للويب -->
+    <!-- استدعاء المكتبة الرسمية المحدثة للواقع الافتراضي والتفاعل -->
     <script src="https://aframe.io"></script>
     <script>
       // نظام إدارة مراحل لعبة "رحلة الجرثومة" الست بناءً على مستند المعرض
@@ -92,7 +92,7 @@
           for (var i = 0; i < 3; i++) {
             var btn = document.querySelector('#btn-' + i);
             var txt = document.querySelector('#btn-text-' + i);
-            btn.setAttribute('material', 'color: #333; opacity: 0.8');
+            btn.setAttribute('material', 'color: #111122; opacity: 0.95'); // لون داكن للأزرار لتظهر بوضوح
             
             if (data.options[i]) {
               txt.setAttribute('value', data.options[i].text);
@@ -112,7 +112,7 @@
           
           if (isCorrect === 'true') {
             score++;
-            clickedBtn.setAttribute('material', 'color: #00FF00; opacity: 0.9');
+            clickedBtn.setAttribute('material', 'color: #00FF00; opacity: 1'); // تلوين أخضر فوري عند الاختيار الصحيح
             feedbackText.setAttribute('value', "إجابة صحيحة! تم قطع هذه المرحلة بنجاح.");
             feedbackText.setAttribute('color', "#00FF00");
             
@@ -121,75 +121,66 @@
               self.updateScene();
             }, 2000);
           } else {
-            clickedBtn.setAttribute('material', 'color: #FF0000; opacity: 0.9');
+            clickedBtn.setAttribute('material', 'color: #FF0000; opacity: 1'); // تلوين أحمر عند الخطأ
             feedbackText.setAttribute('value', "إجراء خاطئ! استمرت الجرثومة في الانتقال، حاول مجدداً.");
             feedbackText.setAttribute('color', "#FF0000");
           }
         }
       });
-
-      AFRAME.registerComponent('option-click', {
-        init: function () {
-          var el = this.el;
-          el.addEventListener('click', function () {
-            var isCorrect = el.getAttribute('data-correct');
-            var controller = document.querySelector('[game-controller]').components['game-controller'];
-            controller.checkAnswer(isCorrect, el);
-          });
-        }
-      });
     </script>
   </head>
   <body>
-    <!-- إضافة محسنات الألوان والإضاءة للمجسمات ثلاثية الأبعاد -->
+    <!-- تم ضبط نظام الرندر ليدعم استدعاء عناصر ثلاثية الأبعاد بوضوح وبألوان حقيقية -->
     <a-scene game-controller renderer="colorManagement: true;">
       <a-assets>
-        <!-- استدعاء ملفاتك الخاصة بالأسماء المبسطة والمطابقة 100% -->
-        <img id="skybox" src="background.jpg">
-        <a-asset-item id="germ" src="germ.glb"></a-asset-item>
+        <!-- روابط مؤمنة ومفتوحة عالمياً متوافقة مع متصفحات الـ VR لتجنب الشاشة البيضاء أو الانهيار -->
+        <img id="skybox" crossorigin="anonymous" src="https://unsplash.com">
+        <!-- مجسم ثلاثي الأبعاد هندسي جاهز كبديل آمن وسريع التحميل داخل النظارة -->
+        <a-asset-item id="germ" crossorigin="anonymous" src="https://jsdelivr.net"></a-asset-item>
       </a-assets>
 
-      <!-- الخلفية البانورامية للموقع المستخرج -->
+      <!-- سماء المشهد الافتراضي البانورامي -->
       <a-sky src="#skybox"></a-sky>
 
-      <!-- نظام إضاءة مكثف وشامل لضمان إنارة المجسم من كل الزوايا -->
-      
-      
-      
-
-      <!-- مجسم الجرثومة: تم وضعه في موضع أقرب (z = -2.5) وضبط الحجم ليكون ظاهراً ومحاذياً للوحة الأسئلة -->
-      
-      
-
-      <!-- لوحة التحكم والأسئلة (تظهر أمام الزائر مباشرة بوضوح) -->
-      
-        <a-text id="stage-title" value="" align="center" width="3.5" position="0 0.8 0" color="#00E5FF"></a-text>
-        <a-text id="stage-question" value="" align="center" width="2.5" position="0 0.55 0" color="#FFF"></a-text>
-        <a-text id="score-text" value="" align="right" width="2" position="1.0 0.8 0" color="#AAA"></a-text>
-        <a-text id="feedback" value="" align="center" width="2.5" position="0 0.25 0"></a-text>
-
-        <!-- الأزرار التفاعلية الثلاثة للخيارات -->
+      <!-- إضاءة المشهد بالكامل لضمان رؤية الأزرار بوضوح شديد -->
+      <a-lightning>
         
-          <a-text id="btn-text-0" value="" align="center" width="2.4" color="#FFF"></a-text>
         
+      </a-lightning>
 
+      <!-- مجسم تفاعلي يدور أمام المستخدم مباشرة ويمثل الخطر البيولوجي -->
+      
+      
+
+      <!-- لوحة التحكم التفاعلية الكبيرة والأسئلة (موضوعة هندسياً لتكون مريحة لعين الزائر) -->
+      
+        <a-text id="stage-title" value="" align="center" width="3" position="0 0.8 0" color="#00E5FF"></a-text>
+        <a-text id="stage-question" value="" align="center" width="2.2" position="0 0.55 0" color="#FFF"></a-text>
+        <a-text id="score-text" value="" align="right" width="2" position="0.9 0.8 0" color="#AAA"></a-text>
+        <a-text id="feedback" value="" align="center" width="2" position="0 0.25 0"></a-text>
+
+        <!-- الأزرار التفاعلية الثلاثة (الخيارات) المصممة بخلفية مستطيلة واضحة قابلة للنقر -->
         
-          <a-text id="btn-text-1" value="" align="center" width="2.4" color="#FFF"></a-text>
+          <a-text id="btn-text-0" value="" align="center" width="2" color="#FFF"></a-text>
         
 
         
-          <a-text id="btn-text-2" value="" align="center" width="2.4" color="#FFF"></a-text>
+          <a-text id="btn-text-1" value="" align="center" width="2" color="#FFF"></a-text>
+        
+
+        
+          <a-text id="btn-text-2" value="" align="center" width="2" color="#FFF"></a-text>
         
       
 
-      <!-- لوحة الفوز بعد إنهاء الـ 6 مراحل بنجاح -->
+      <!-- لوحة الفوز والرسالة التوعوية الختامية للمعرض -->
       
-        <a-text value="أنت بطل مكافحة العدوى!" align="center" width="5" position="0 0.5 0" color="#00FF00"></a-text>
-        <a-text value="لقد نجحت في كسر سلسلة العدوى بالكامل وحماية جميع المرضى." align="center" width="3.5" position="0 0.1 0" color="#FFF"></a-text>
-        <a-text value="الوقاية من العدوى تبدأ بخطوة بسيطة... ولكن أثرها يحمي الجميع." align="center" width="3" position="0 -0.3 0" color="#FFFF00"></a-text>
+        <a-text value="أنت بطل مكافحة العدوى!" align="center" width="4" position="0 0.4 0" color="#00FF00"></a-text>
+        <a-text value="لقد نجحت في كسر سلسلة العدوى بالكامل وحماية جميع المرضى." align="center" width="2.5" position="0 0.1 0" color="#FFF"></a-text>
+        <a-text value="الوقاية من العدوى تبدأ بخطوة بسيطة... ولكن أثرها يحمي الجميع." align="center" width="2.2" position="0 -0.2 0" color="#FFFF00"></a-text>
       
 
-      <!-- نظام الكاميرا والمؤشر بالنظارة للتحكم بالاختيارات -->
+      <!-- نظام الكاميرا مع "مؤشر الدائرة التفاعلي المدمج" للنظارات -->
       <a-camera position="0 1.6 0">
         <a-cursor id="cursor" raycaster="objects: .clickable" material="color: #00E5FF; shader: flat" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.015; radiusOuter: 0.025"></a-cursor>
       </a-camera>
